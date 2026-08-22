@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    ports: ["127.0.0.1:8500:8500"]
+    restart: unless-stopped
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
