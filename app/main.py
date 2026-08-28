@@ -22,7 +22,7 @@ from pydantic import BaseModel, Field
 VERSION = "1.0.0"
 SERVICE_NAME = "sm-hr"
 DISPLAY_NAME = "SM HR"
-DESCRIPTION = "人力资源系统"
+DESCRIPTION = "人事管理系统（HR）：组织、员工、考勤、薪酬与绩效"
 ENVIRONMENT = os.getenv("SM_ENV", "development").lower()
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("SM_ALLOWED_HOSTS", "localhost,127.0.0.1,testserver").split(",") if h.strip()]
 REQUESTS = {"total": 0, "errors": 0, "latency_ms_total": 0.0}
@@ -38,7 +38,7 @@ AUDIT_CENTER_URL = os.getenv("SM_AUDIT_CENTER_URL", "")
 INTEGRATION_DEPENDENCIES = ['sm-iam', 'sm-audit-log-center']
 INTEGRATION_EVENTS = ["health.checked", "resource.changed", "audit.recorded"]
 _db_conn: sqlite3.Connection | None = None
-_db_lock = threading.Lock()
+_db_lock = threading.RLock()
 
 
 def db() -> sqlite3.Connection:
@@ -185,12 +185,12 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
 class Item(BaseModel):
     name: str = Field(min_length=1, max_length=120)
-    owner: str = Field(default="人力资源部", min_length=1, max_length=80)
+    owner: str = Field(default="人力行政部", min_length=1, max_length=80)
     priority: Literal["P0", "P1", "P2", "P3"] = "P1"
     status: Literal["planned", "active", "review", "closed"] = "active"
 
 ITEMS: list[dict[str, object]] = [
-    {"id": "demo-1", "name": "核心能力基线", "owner": "人力资源部", "priority": "P1", "status": "active", "created_at": datetime.now(UTC).isoformat()},
+    {"id": "demo-1", "name": "核心能力基线", "owner": "人力行政部", "priority": "P1", "status": "active", "created_at": datetime.now(UTC).isoformat()},
     {"id": "demo-2", "name": "安全与审计策略", "owner": "安全合规部", "priority": "P1", "status": "review", "created_at": datetime.now(UTC).isoformat()},
 ]
 
