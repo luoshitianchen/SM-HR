@@ -1,0 +1,16 @@
+[project]
+name = "SM-HR"
+version = "2.0.0"
+description = "人力资源管理系统：组织、员工、考勤、请假与人力报表"
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 200
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
