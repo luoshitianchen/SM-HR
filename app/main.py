@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field
 from app import base
 
 SERVICE = "sm-hr"
-VERSION = "2.0.0"
+VERSION = "3.0.0"
 NAME = "SM HR"
 DESCRIPTION = "人力资源管理系统：组织、员工、考勤、请假与薪酬核算"
 PORT = 8500
