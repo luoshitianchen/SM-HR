@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sm-hr
+  namespace: sm
+  labels:
+    app: sm-hr
+    platform: sm-suite
+spec:
+  type: ClusterIP
+  selector:
+    app: sm-hr
+  ports:
+  - name: http
+    port: 8500
+    targetPort: http
+    protocol: TCP
