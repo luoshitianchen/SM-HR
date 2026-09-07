@@ -149,7 +149,7 @@ def list_employees(department: str | None = None, status_: str | None = None) ->
         params.append(status_)
     where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
     with base.db_ctx() as conn:
-        rows = conn.execute(f"SELECT * FROM employees{where} ORDER BY joined_at DESC LIMIT 200", params).fetchall()
+        rows = conn.execute(f"SELECT * FROM employees{where} ORDER BY joined_at DESC LIMIT 200", params).fetchall()  # nosec B608  # SQL片段为程序生成，用户输入已参数化
     return {"items": [dict(r) for r in rows], "total": len(rows)}
 
 
