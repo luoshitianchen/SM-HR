@@ -1,7 +1,11 @@
 """HR 业务深化测试：员工档案、考勤、入转调离、请假。"""
 from __future__ import annotations
+from datetime import date, timedelta
 
 H = {"X-Internal-Token": "test-internal-key-12345"}
+
+# 动态未来生效日（服务拒绝过去日期，测试日期不可硬编码）
+FUTURE_DATE = (date.today() + timedelta(days=30)).isoformat()
 
 
 async def _make_profile(client, emp_no="E-001", name="张三", dept="研发部"):
@@ -109,7 +113,7 @@ class TestChange:
         resp = await client.post("/api/hr/changes", json={
             "employee_id": p["id"], "change_type": "transfer",
             "from_department": "研发部", "to_department": "产品部",
-            "effective_date": "2026-09-20", "reason": "组织调整",
+            "effective_date": FUTURE_DATE, "reason": "组织调整",
         }, headers=H)
         assert resp.status_code == 201
         assert resp.json()["status"] == "draft"
@@ -126,7 +130,7 @@ class TestChange:
         p = (await _make_profile(client, "E-RESIGN")).json()
         c = (await client.post("/api/hr/changes", json={
             "employee_id": p["id"], "change_type": "resign",
-            "effective_date": "2026-09-20",
+            "effective_date": FUTURE_DATE,
         }, headers=H)).json()
         await client.patch(f"/api/hr/changes/{c['id']}/transition",
                            json={"action": "approve"}, headers=H)
@@ -140,7 +144,7 @@ class TestChange:
         p = (await _make_profile(client, "E-CHG3")).json()
         c = (await client.post("/api/hr/changes", json={
             "employee_id": p["id"], "change_type": "transfer",
-            "effective_date": "2026-09-20",
+            "effective_date": FUTURE_DATE,
         }, headers=H)).json()
         # draft 不可直接 complete
         resp = await client.patch(f"/api/hr/changes/{c['id']}/transition",
